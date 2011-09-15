@@ -17,7 +17,7 @@
     NSData *data2 = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"tumblrpic" ofType:@"jpg"]];
     NSArray *array = [NSArray arrayWithObjects:data, data2, nil];
     dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        TumblrUploadr *tu = [[TumblrUploadr alloc] initWithNSDataForPhotos:array andBlogName:@"finnallen.tumblr.com" andDelegate:self];
+        TumblrUploadr *tu = [[TumblrUploadr alloc] initWithNSDataForPhotos:array andBlogName:@"supergreatblog.tumblr.com" andDelegate:self];
         dispatch_async( dispatch_get_main_queue(), ^{
             [tu signAndSendWithTokenKey:[tumblrAccessToken key] andSecret:[tumblrAccessToken secret]];
         });
