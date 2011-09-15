@@ -1,4 +1,4 @@
-// In your ViewController header, import the headers and add <TumblrUploadrDelegate>:
+// In your MyViewController.h header, import the headers and add <TumblrUploadrDelegate>:
 #import "TumblrUploadr.h"
 #import "NSData+URLEncode.h"
 
@@ -6,8 +6,12 @@
 ...
 }
 
+// Now add your tumblr Consumer Key and Secret to the top of TumblrUploader.m ///!!!
+// You'll also need an OAuth access token key and secret which you will add in the 
+// appropriate place below
+// Getting the access token is beyond the scope of this project
 
-// In your implementation file, make a function to upload the files
+// In your MyViewController.m implementation file, make a function to upload the files
 // For now, you should thread the process as shown because otherwise the UI will lock up
 // This only works for iOS 4
 // TO DO: make the NSData category code to convert binary files to string faster / more efficient
@@ -19,7 +23,7 @@
     dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         TumblrUploadr *tu = [[TumblrUploadr alloc] initWithNSDataForPhotos:array andBlogName:@"supergreatblog.tumblr.com" andDelegate:self];
         dispatch_async( dispatch_get_main_queue(), ^{
-            [tu signAndSendWithTokenKey:[tumblrAccessToken key] andSecret:[tumblrAccessToken secret]];
+            [tu signAndSendWithTokenKey:@"myAccessTokenKey" andSecret:@"myAccessTokenSecret"];
         });
     });
 }
