@@ -23,6 +23,7 @@ typedef enum _ASIOAuthSignatureMethod2 {
     NSString *blogName;
     NSArray *photoDataArray;
     NSMutableURLRequest *request;
+    NSString *caption;
 }
 
 
@@ -43,6 +44,7 @@ typedef enum _ASIOAuthSignatureMethod2 {
 
 - (id)initWithNSDataForPhotos:(NSArray *)aPhotoDataArray andBlogName:(NSString *)aBlogName andDelegate:(id)aDelegate;
 
+- (id)initWithNSDataForPhotos:(NSArray *)aPhotoDataArray andBlogName:(NSString *)aBlogName andDelegate:(id)aDelegate andCaption:(NSString *)aCaption;
 
 @property (nonatomic, retain) NSURL *url;
 @property (nonatomic, assign) id <TumblrUploadrDelegate> delegate;
@@ -51,6 +53,8 @@ typedef enum _ASIOAuthSignatureMethod2 {
 @property (nonatomic, retain) NSString *blogName;
 @property (nonatomic, retain) NSArray *photoDataArray;
 @property (nonatomic, retain) NSMutableURLRequest *request;
+@property (nonatomic, retain) NSString *caption;
+
 
 @end
 

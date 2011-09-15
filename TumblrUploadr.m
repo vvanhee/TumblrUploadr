@@ -14,8 +14,9 @@
 #import "NSString+URLEncode.h"
 #import "NSData+URLEncode.h"
 
-static NSString *tumblrConsumerKey = @"mystring";
-static NSString *tumblrConsumerSecret = @"mystring";
+
+static NSString *tumblrConsumerKey = @"ENTER ME HERE";
+static NSString *tumblrConsumerSecret = @"ENTER ME HERE";
 
 // Signature Method strings, keep in sync with ASIOAuthSignatureMethod
 static const NSString *oauthSignatureMethodName[] = {
@@ -28,15 +29,20 @@ static const NSString *oauthVersion = @"1.0";
 
 @implementation TumblrUploadr
 
-@synthesize url, delegate, params,responseData, blogName, photoDataArray, request;
-
+@synthesize url, delegate, params,responseData, blogName, photoDataArray, request, caption;
 
 - (id)initWithNSDataForPhotos:(NSArray *)aPhotoDataArray andBlogName:(NSString *)aBlogName andDelegate:(id)aDelegate {
+    [self initWithNSDataForPhotos:aPhotoDataArray andBlogName:aBlogName andDelegate:aDelegate andCaption:nil];
+    return self;
+}
+
+- (id)initWithNSDataForPhotos:(NSArray *)aPhotoDataArray andBlogName:(NSString *)aBlogName andDelegate:(id)aDelegate andCaption:(NSString *)aCaption {
     self = [super init];
     if (self) {
         self.delegate = aDelegate;
         self.blogName = aBlogName;
         self.photoDataArray = aPhotoDataArray;
+        self.caption = aCaption;
         self.url = [NSURL URLWithString:[NSString stringWithFormat:@"http://api.tumblr.com/v2/blog/%@/post",[self blogName]]];
         NSMutableData *someResponseData = [NSMutableData data];
         [self setResponseData:someResponseData];
@@ -51,6 +57,9 @@ static const NSString *oauthVersion = @"1.0";
             [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:thisKey, @"key", [photoData stringWithoutURLEncoding], @"value", nil]];
         }
         [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"photo", @"value", nil]];
+        if (self.caption !=nil) {
+            [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"caption", @"key", [self.caption encodeForURL], @"value", nil]];
+        }
         //    [request setHTTPBody:XXX];
         [request setValue:[self.url host] forHTTPHeaderField:@"Host"];
         [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
@@ -62,9 +71,6 @@ static const NSString *oauthVersion = @"1.0";
 
 - (void) signAndSendWithTokenKey:(NSString *)key andSecret:(NSString *)secret {
     [self signRequestWithClientIdentifier:tumblrConsumerKey secret:tumblrConsumerSecret tokenIdentifier:key secret:secret usingMethod:ASIOAuthHMAC_SHA1SignatureMethod2];
-    //NSString *bodyString = [[[NSString alloc] initWithData:[request HTTPBody] encoding:NSUTF8StringEncoding] autorelease];
-    //NSLog(@"signed request body: %@", bodyString);
-    //NSLog(@"signed req header %@",[request allHTTPHeaderFields]);
 	[[NSURLConnection alloc] initWithRequest:request delegate:self];    
 }
 
@@ -300,8 +306,7 @@ static const NSString *oauthVersion = @"1.0";
     ///now can we set the post body??
     NSMutableArray *parameterStringsForBody = [NSMutableArray array];
     for (NSDictionary *parameter in params)
-        [parameterStringsForBody addObject:[NSString stringWithFormat:@"%@=%@", [parameter objectForKey:@"key"], [parameter objectForKey:@"value"]]];
-    //NSLog(@"parameters : %@",[parameterStrings componentsJoinedByString:@"%26"]);
+            [parameterStringsForBody addObject:[NSString stringWithFormat:@"%@=%@", [parameter objectForKey:@"key"], [parameter objectForKey:@"value"]]];
     NSString *stringForBody = [parameterStringsForBody componentsJoinedByString:@"&"];
     [request setHTTPBody:[stringForBody dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -327,14 +332,6 @@ static const NSString *oauthVersion = @"1.0";
     [request setValue:[NSString stringWithFormat:@"OAuth %@", [oauthHeader componentsJoinedByString:@", "]] forHTTPHeaderField:@"Authorization"];
 }
 
-/*
-- (void)buildPostBody
-{
-			[self setPostLength:[[self postBody] length]];
-		[self addRequestHeader:@"Content-Length" value:[NSString stringWithFormat:@"%llu",[self postLength]]];    
-}
- */
-
 
 - (void) dealloc {
     [url release];
@@ -343,6 +340,7 @@ static const NSString *oauthVersion = @"1.0";
     [blogName release];
     [photoDataArray release];
     [request release];
+    [caption release];
     [super dealloc];
 }
 
