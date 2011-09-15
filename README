@@ -1,6 +1,6 @@
-// In your MyViewController.h header, import the headers and add <TumblrUploadrDelegate>:
+// Copy all files to a group in your project
+// In your MyViewController.h header, import the header and add <TumblrUploadrDelegate>:
 #import "TumblrUploadr.h"
-#import "NSData+URLEncode.h"
 
 @interface MyViewController : UIViewController <TumblrUploadrDelegate> {
 ...
