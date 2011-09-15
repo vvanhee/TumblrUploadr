@@ -1,0 +1,35 @@
+// In your ViewController header, import the headers and add <TumblrUploadrDelegate>:
+#import "TumblrUploadr.h"
+#import "NSData+URLEncode.h"
+
+@interface MyViewController : UIViewController <TumblrUploadrDelegate> {
+...
+}
+
+
+// In your implementation file, make a function to upload the files
+// For now, you should thread the process as shown because otherwise the UI will lock up
+// This only works for iOS 4
+// TO DO: make the NSData category code to convert binary files to string faster / more efficient
+// TO DO: automatically thread long processes
+- (void) uploadFiles {
+    NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"tumb2" ofType:@"jpg"]];
+    NSData *data2 = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"tumblrpic" ofType:@"jpg"]];
+    NSArray *array = [NSArray arrayWithObjects:data, data2, nil];
+    dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        TumblrUploadr *tu = [[TumblrUploadr alloc] initWithNSDataForPhotos:array andBlogName:@"finnallen.tumblr.com" andDelegate:self];
+        dispatch_async( dispatch_get_main_queue(), ^{
+            [tu signAndSendWithTokenKey:[tumblrAccessToken key] andSecret:[tumblrAccessToken secret]];
+        });
+    });
+}
+
+// Then add the two delegate methods, one of which should be called:
+- (void) tumblrUploadr:(TumblrUploadr *)tu didFailWithError:(NSError *)error {
+    NSLog(@"connection failed with error %@",[error localizedDescription]);
+    [tu release];
+}
+- (void) tumblrUploadrDidSucceed:(TumblrUploadr *)tu withResponse:(NSString *)response {
+    NSLog(@"connection succeeded with response: %@", response);
+    [tu release];
+}
