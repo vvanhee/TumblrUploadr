@@ -1,4 +1,4 @@
-## This iOS / Objective C code uploads multiple photos to Flickr as a slideshow / photoset.
+# iOS / Objective C code to upload multiple photos to Flickr API as a slideshow / photoset.
 
 Steps to get this to work:
 
