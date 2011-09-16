@@ -1,4 +1,4 @@
-# iPhone code to upload multiple photos to Flickr API as a slideshow / photoset.
+# iPhone code to upload multiple photos to Flickr API as a slideshow / photoset
 
 Steps to get this to work:
 
