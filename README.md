@@ -1,12 +1,13 @@
-This iOS / Objective C code uploads multiple photos to Flickr as a slideshow / photoset.
+## This iOS / Objective C code uploads multiple photos to Flickr as a slideshow / photoset.
 
 Steps to get this to work:
 
-Copy all files to a group in your project.  In your MyViewController.h, import the header and register the TumblrUploadrDelegate:
+Copy all files to a group in your project.  
+In your MyViewController.h, import the header and register the TumblrUploadrDelegate like so:
 
     #import "TumblrUploadr.h"
-
-    @interface MyViewController : UIViewController <TumblrUploadrDelegate> {
+    
+    @interface MyViewController : UIViewController <TumblrUploadrDelegate, AnotherDelegate> {
     ...
     }
 
@@ -15,11 +16,11 @@ Now add your tumblr Consumer Key and Secret to the top of TumblrUploader.m!!  Yo
 In your MyViewController.m implementation file, make a function to upload the files.  For now, you should thread the process as shown because otherwise the UI will lock up. This only works for iOS 4.
 
     - (void) uploadFiles {
-        NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"tumb2" ofType:@"jpg"]];
-        NSData *data2 = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"tumblrpic" ofType:@"jpg"]];
-        NSArray *array = [NSArray arrayWithObjects:data, data2, nil];
+        NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"picture1" ofType:@"jpg"]];
+        NSData *data2 = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"picture2" ofType:@"jpg"]];
+        NSArray *array = [NSArray arrayWithObjects:data1, data2, nil];
         dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            TumblrUploadr *tu = [[TumblrUploadr alloc] initWithNSDataForPhotos:array andBlogName:@"supergreatblog.tumblr.com" andDelegate:self];
+            TumblrUploadr *tu = [[TumblrUploadr alloc] initWithNSDataForPhotos:array andBlogName:@"supergreatblog.tumblr.com" andDelegate:self andCaption:@"Great Photos!"];
             dispatch_async( dispatch_get_main_queue(), ^{
                 [tu signAndSendWithTokenKey:@"myAccessTokenKey" andSecret:@"myAccessTokenSecret"];
             });
