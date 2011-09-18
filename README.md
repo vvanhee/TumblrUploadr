@@ -1,5 +1,7 @@
 # iPhone code to upload multiple photos to Flickr API as a slideshow / photoset
 
+If you use this code, [please upvote my response on Stack Overflow here](http://stackoverflow.com/questions/6878662/tumblr-api-how-to-upload-multiple-images-to-a-photoset/7431731#7431731).
+
 Steps to get this to work:
 
 Copy all files to a group in your project.  
